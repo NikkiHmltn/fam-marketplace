@@ -3,6 +3,7 @@ import express from "express";
 import cors from "cors";
 import helmet from "helmet";
 import connectDB from "./config/db";
+import { authRouter } from "./routes";
 
 dotenv.config();
 
@@ -15,11 +16,14 @@ connectDB();
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // Routes
 app.get("/health", (_req, res) => {
   res.status(200).json({ status: "OK", message: "Server is healthy" });
 });
+
+app.use("/api/auth", authRouter);
 
 connectDB().then(() => {
   app.listen(PORT, () => {
